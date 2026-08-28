@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support — EXIO PBD</title>
+<meta name="description" content="Support, FAQ, and contact for the EXIO PBD player-behavior derivatives simulator.">
+<style>
+  :root {
+    --bg: #0b0d12; --bg-2: #11141b; --line: #1d2129;
+    --ink: #e8eaf0; --muted: #8b93a3;
+    --gold: #d4af6a; --gold-2: #b8924d;
+    --up: #6ed3a3; --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(1000px 500px at 80% -10%, rgba(212,175,106,.08), transparent 60%),
+      var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.7; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 28px; }
+  header { border-bottom: 1px solid var(--line); background: rgba(11,13,18,.7); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 50; }
+  .nav { display: flex; justify-content: space-between; align-items: center; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; color: var(--ink); }
+  .mark { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, var(--gold), var(--gold-2)); display: grid; place-items: center; color: #1a1408; font-weight: 800; font-size: 14px; }
+  .nav-links { display: flex; gap: 20px; }
+  .nav a { color: var(--muted); font-size: 14px; }
+  .nav a:hover { color: var(--gold); }
+
+  h1 { font-size: clamp(28px, 4vw, 40px); letter-spacing: -.01em; margin: 56px 0 6px; }
+  .lede { color: var(--muted); margin: 0 0 36px; max-width: 680px; }
+
+  h2 { font-size: 22px; margin: 36px 0 12px; letter-spacing: -.01em; }
+  h3 { font-size: 16px; margin: 22px 0 6px; color: var(--ink); }
+  p, li { color: #d2d6df; font-size: 15px; }
+  ul, ol { padding-left: 22px; }
+  li { margin: 6px 0; }
+  a { color: var(--gold); }
+
+  .grid {
+    display: grid; gap: 18px;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 24px 0 8px;
+  }
+  @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+  .card {
+    border: 1px solid var(--line); background: var(--bg-2);
+    border-radius: var(--radius); padding: 22px;
+  }
+  .card h3 { margin: 0 0 6px; font-size: 16px; }
+  .card p { margin: 0 0 10px; font-size: 14px; color: var(--muted); }
+  .card a.btn {
+    display: inline-block; margin-top: 6px;
+    border: 1px solid var(--line); padding: 8px 14px; border-radius: 10px;
+    font-size: 13px; color: var(--ink);
+  }
+  .card a.btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  details {
+    border: 1px solid var(--line); background: var(--bg-2);
+    border-radius: 12px; padding: 14px 18px; margin-bottom: 10px;
+  }
+  details[open] { border-color: #2a3140; }
+  summary { cursor: pointer; font-weight: 600; font-size: 15px; }
+  details p { color: var(--muted); font-size: 14px; margin: 10px 0 0; }
+
+  .contact {
+    border: 1px solid var(--line); background: var(--bg-2);
+    border-radius: var(--radius); padding: 26px; margin: 12px 0 0;
+  }
+  .contact p { margin: 0 0 8px; }
+  .contact strong { color: var(--gold); }
+
+  footer { border-top: 1px solid var(--line); padding: 32px 0 56px; color: var(--muted); font-size: 13px; margin-top: 56px; }
+  .foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .foot a { color: var(--muted); margin-left: 18px; }
+  .foot a:hover { color: var(--gold); }
+
+  @media (max-width: 700px) { .nav-links { display: none; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="index.html" class="brand">
+      <div class="mark">E</div>
+      <span>EXIO PBD</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Support</h1>
+  <p class="lede">Help, troubleshooting, and contact channels for EXIO PBD. If something on the desk isn't behaving
+     the way you expect, this is the place to start.</p>
+
+  <h2>Get help fast</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Email support</h3>
+      <p>The fastest path to a real person. Include your iOS version, device model, and a short description.</p>
+      <a class="btn" href="mailto:support@exio-pbd.example">support@exio-pbd.example</a>
+    </div>
+    <div class="card">
+      <h3>Bug report</h3>
+      <p>Send a quick repro: tap sequence, what you expected, what happened. Screenshots welcome.</p>
+      <a class="btn" href="mailto:bugs@exio-pbd.example?subject=Bug%20Report">bugs@exio-pbd.example</a>
+    </div>
+    <div class="card">
+      <h3>Feature request</h3>
+      <p>Tell us what instrument, indicator, or workflow would make the desk more useful to you.</p>
+      <a class="btn" href="mailto:ideas@exio-pbd.example?subject=Feature%20Request">ideas@exio-pbd.example</a>
+    </div>
+  </div>
+
+  <h2>Frequently asked questions</h2>
+
+  <details>
+    <summary>The price for one of my instruments isn't moving. Is the feed stuck?</summary>
+    <p>First, check the top bar — the live indicator should show a green dot. If it does and a particular ticker is
+       flat, that's normal: the engine is a deterministic random walk, and a flat stretch is a possible state. You can
+       also pause/resume the feed from Settings, or tap the price card to force a reset of just that ticker.</p>
+  </details>
+
+  <details>
+    <summary>My positions disappeared after I reinstalled the app.</summary>
+    <p>Positions, orders, fills, alerts and notifications are stored locally in the app sandbox. Uninstalling
+       removes them. To preserve state across reinstalls, keep the app installed, or use the device's iCloud
+       backup with the app included.</p>
+  </details>
+
+  <details>
+    <summary>How do I reset the simulator back to a clean book?</summary>
+    <p>Open <strong>Settings → Reset desk</strong>. You'll be asked to confirm. This clears all positions, orders,
+       alerts, fills and price history, and reseeds the random walk from the base prices.</p>
+  </details>
+
+  <details>
+    <summary>An alert isn't firing when I expect it to.</summary>
+    <p>Alerts evaluate against the last price at each tick. Check the alert direction (above / below) and the
+       current value — alerts only trigger on a crossing, not on being already-past the threshold. You can verify
+       the active alerts list from the Notifications tab.</p>
+  </details>
+
+  <details>
+    <summary>Does the app work in landscape on iPad?</summary>
+    <p>Yes. The desk, markets and analytics layouts adapt to landscape on iPhone and iPad.</p>
+  </details>
+
+  <details>
+    <summary>Can I export my data?</summary>
+    <p>The app stores JSON files inside its sandbox. If you need an export for support, use the iOS "Files" share
+       sheet from the Settings tab to share a copy with yourself.</p>
+  </details>
+
+  <details>
+    <summary>Will the app sync between my devices?</summary>
+    <p>Not today. EXIO PBD keeps state local to each device. We may add optional iCloud sync in a future version;
+       if we do, it will be opt-in and surfaced in-app.</p>
+  </details>
+
+  <details>
+    <summary>I have a feature / instrument I want traded on the desk.</summary>
+    <p>Send it to <strong>ideas@exio-pbd.example</strong>. The current instrument set is curated; new tickers are
+       added periodically.</p>
+  </details>
+
+  <h2>Known limitations</h2>
+  <ul>
+    <li>The simulator is single-device; there is no multi-user book or shared ledger.</li>
+    <li>No backtesting module is shipped in this version.</li>
+    <li>No real-money or brokerage connection. The app is a study environment, not a trading platform.</li>
+  </ul>
+
+  <h2>Contact</h2>
+  <div class="contact">
+    <p><strong>General:</strong> <a href="mailto:support@exio-pbd.example">support@exio-pbd.example</a></p>
+    <p><strong>Bugs:</strong> <a href="mailto:bugs@exio-pbd.example">bugs@exio-pbd.example</a></p>
+    <p><strong>Feature ideas:</strong> <a href="mailto:ideas@exio-pbd.example">ideas@exio-pbd.example</a></p>
+    <p style="color: var(--muted); margin-top: 14px;">Response window: 1–3 business days. Critical bugs are triaged
+       faster.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>© 2026 EXIO PBD. Not investment advice. Simulation only.</div>
+    <div>
+      <a href="index.html">Home</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms of Use</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

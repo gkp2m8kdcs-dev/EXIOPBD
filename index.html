@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EXIO PBD — Player Behavior Derivatives Desk</title>
+<meta name="description" content="EXIO PBD is a simulated derivatives desk for player-behavior metrics across games, studios, and live services. Trade, hedge, and analyze the engagement economy.">
+<style>
+  :root {
+    --bg: #0b0d12;
+    --bg-2: #11141b;
+    --line: #1d2129;
+    --ink: #e8eaf0;
+    --muted: #8b93a3;
+    --gold: #d4af6a;
+    --gold-2: #b8924d;
+    --up: #6ed3a3;
+    --down: #e07a7a;
+    --radius: 14px;
+    --shadow: 0 10px 40px rgba(0,0,0,.45);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(212,175,106,.10), transparent 60%),
+      radial-gradient(900px 500px at -10% 30%, rgba(80,120,200,.06), transparent 60%),
+      var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  a { color: var(--gold); text-decoration: none; }
+  a:hover { color: #e6c98a; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+
+  /* Top nav */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: saturate(140%) blur(14px);
+    background: rgba(11,13,18,.72);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: .5px; }
+  .brand-mark {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-2));
+    display: grid; place-items: center; color: #1a1408; font-weight: 800; font-size: 14px;
+  }
+  .brand-name { font-size: 15px; }
+  .brand-sub { color: var(--muted); font-size: 12px; margin-left: 8px; }
+  .nav-links { display: flex; gap: 22px; }
+  .nav-links a { color: var(--ink); font-size: 14px; opacity: .85; }
+  .nav-links a:hover { color: var(--gold); }
+  .cta {
+    background: linear-gradient(180deg, var(--gold), var(--gold-2));
+    color: #1a1408;
+    padding: 8px 16px; border-radius: 10px; font-weight: 600; font-size: 13px;
+  }
+  .cta:hover { color: #1a1408; filter: brightness(1.05); }
+
+  /* Hero */
+  .hero { padding: 96px 0 72px; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--bg-2);
+    color: var(--muted); font-size: 12px; letter-spacing: .8px; text-transform: uppercase;
+  }
+  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--up); box-shadow: 0 0 10px var(--up); }
+  .hero h1 {
+    font-size: clamp(36px, 5.5vw, 64px);
+    line-height: 1.05; letter-spacing: -.02em; margin: 18px 0 18px;
+    font-weight: 700;
+  }
+  .hero h1 .accent { background: linear-gradient(180deg, var(--gold), var(--gold-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero p.lead { color: var(--muted); font-size: clamp(15px, 1.4vw, 18px); max-width: 720px; margin: 0 0 28px; }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 20px; border-radius: 12px; font-weight: 600; font-size: 14px;
+    border: 1px solid var(--line); background: var(--bg-2); color: var(--ink);
+    transition: transform .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .btn:hover { border-color: var(--gold); transform: translateY(-1px); }
+  .btn.primary {
+    background: linear-gradient(180deg, var(--gold), var(--gold-2));
+    color: #1a1408; border-color: transparent;
+  }
+  .btn.primary:hover { filter: brightness(1.06); }
+
+  .ticker {
+    margin-top: 48px;
+    border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg-2);
+    overflow: hidden; box-shadow: var(--shadow);
+  }
+  .ticker-row {
+    display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;
+    padding: 14px 18px; border-bottom: 1px solid var(--line);
+    font-size: 13px; color: var(--muted);
+  }
+  .ticker-row:last-child { border-bottom: none; }
+  .ticker-row.head { color: #aab1bf; font-weight: 600; letter-spacing: .4px; text-transform: uppercase; font-size: 11px; }
+  .ticker-row .sym { color: var(--ink); font-weight: 600; }
+  .ticker-row .up { color: var(--up); }
+  .ticker-row .down { color: var(--down); }
+
+  /* Sections */
+  section { padding: 72px 0; }
+  .section-head { max-width: 720px; margin: 0 auto 40px; text-align: center; }
+  .section-head h2 {
+    font-size: clamp(26px, 3.4vw, 40px); margin: 0 0 12px;
+    letter-spacing: -.01em;
+  }
+  .section-head p { color: var(--muted); margin: 0; }
+
+  .grid-3 {
+    display: grid; gap: 20px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 900px) { .grid-3 { grid-template-columns: 1fr; } }
+  .card {
+    border: 1px solid var(--line); background: var(--bg-2);
+    border-radius: var(--radius); padding: 22px;
+    transition: transform .2s ease, border-color .2s ease;
+  }
+  .card:hover { transform: translateY(-2px); border-color: #2a3140; }
+  .card .icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: linear-gradient(135deg, rgba(212,175,106,.18), rgba(212,175,106,.06));
+    border: 1px solid rgba(212,175,106,.25);
+    display: grid; place-items: center; margin-bottom: 14px;
+    color: var(--gold); font-weight: 700;
+  }
+  .card h3 { margin: 0 0 8px; font-size: 17px; }
+  .card p { margin: 0; color: var(--muted); font-size: 14px; }
+
+  .grid-2 {
+    display: grid; gap: 20px;
+    grid-template-columns: 1.1fr .9fr;
+  }
+  @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+  .panel {
+    border: 1px solid var(--line); background: var(--bg-2);
+    border-radius: var(--radius); padding: 26px;
+  }
+  .panel h3 { margin: 0 0 6px; font-size: 20px; }
+  .panel p { color: var(--muted); margin: 0 0 16px; font-size: 14px; }
+  .kv { display: grid; grid-template-columns: 1fr auto; gap: 10px 16px; font-size: 14px; }
+  .kv span:nth-child(odd) { color: var(--muted); }
+  .kv span:nth-child(even) { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  .terminal {
+    border: 1px solid var(--line); border-radius: var(--radius); background: #0a0c11;
+    padding: 18px; font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+    font-size: 13px; color: #c8cdd6; box-shadow: var(--shadow);
+  }
+  .terminal .line { display: flex; gap: 10px; padding: 3px 0; }
+  .terminal .time { color: #5d6573; width: 64px; flex-shrink: 0; }
+  .terminal .tag { color: var(--gold); width: 56px; flex-shrink: 0; }
+  .terminal .up { color: var(--up); }
+  .terminal .down { color: var(--down); }
+  .terminal .muted { color: var(--muted); }
+
+  /* Instruments */
+  .inst-grid {
+    display: grid; gap: 16px;
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media (max-width: 900px) { .inst-grid { grid-template-columns: repeat(2, 1fr); } }
+  .inst {
+    border: 1px solid var(--line); background: var(--bg-2);
+    border-radius: 12px; padding: 16px;
+  }
+  .inst .top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+  .inst .t { font-weight: 600; font-size: 14px; }
+  .inst .k { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .inst .name { font-size: 12px; color: var(--muted); margin-bottom: 10px; min-height: 32px; }
+  .inst .price { font-size: 20px; font-variant-numeric: tabular-nums; }
+  .inst .chg { font-size: 12px; }
+  .inst .chg.up { color: var(--up); }
+  .inst .chg.down { color: var(--down); }
+
+  /* FAQ */
+  .faq { max-width: 820px; margin: 0 auto; }
+  details {
+    border: 1px solid var(--line); background: var(--bg-2);
+    border-radius: 12px; padding: 14px 18px; margin-bottom: 10px;
+  }
+  details[open] { border-color: #2a3140; }
+  summary { cursor: pointer; font-weight: 600; font-size: 15px; }
+  details p { color: var(--muted); font-size: 14px; margin: 10px 0 0; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 36px 0 56px; color: var(--muted); font-size: 13px;
+  }
+  .foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .foot-links { display: flex; gap: 18px; }
+
+  @media (max-width: 700px) {
+    .nav-links { display: none; }
+    .hero { padding: 64px 0 48px; }
+    .ticker-row { grid-template-columns: 1.2fr 1fr 1fr 1fr; font-size: 12px; }
+    .ticker-row .col-hide { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <div class="brand">
+      <div class="brand-mark">E</div>
+      <div>
+        <span class="brand-name">EXIO PBD</span>
+        <span class="brand-sub">Player Behavior Derivatives</span>
+      </div>
+    </div>
+    <nav class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#desk">The Desk</a>
+      <a href="#instruments">Instruments</a>
+      <a href="#faq">FAQ</a>
+      <a href="support.html">Support</a>
+    </nav>
+    <a class="cta" href="#download">Get on iOS</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow"><span class="dot"></span> Live feed · Simulation environment</span>
+    <h1>The derivatives desk for <span class="accent">player behavior</span>.</h1>
+    <p class="lead">
+      EXIO PBD turns live-service engagement into a tradable surface. Hedge a launch, take a view on retention,
+      or just study how a synthetic order book reacts when a season drops. Everything runs locally on your device —
+      no accounts, no servers, no real money.
+    </p>
+    <div class="hero-actions">
+      <a class="btn primary" href="#download">Download for iOS</a>
+      <a class="btn" href="#features">Explore the desk</a>
+    </div>
+
+    <!-- Sample ticker -->
+    <div class="ticker" aria-label="Sample market ticker">
+      <div class="ticker-row head">
+        <div>Symbol</div><div>Underlying</div><div>Last</div><div>Δ</div><div class="col-hide">Kind</div>
+      </div>
+      <div class="ticker-row">
+        <div class="sym">PBD-DAU</div><div>Daily Active Users</div><div>128.40</div><div class="up">+1.82%</div><div class="col-hide">Index</div>
+      </div>
+      <div class="ticker-row">
+        <div class="sym">PBD-RTN-30</div><div>30d Retention</div><div>42.06</div><div class="down">-0.34%</div><div class="col-hide">Futures</div>
+      </div>
+      <div class="ticker-row">
+        <div class="sym">PBD-ARPDAU</div><div>Revenue per DAU</div><div>0.87</div><div class="up">+0.41%</div><div class="col-hide">Swap</div>
+      </div>
+      <div class="ticker-row">
+        <div class="sym">PBD-CHRN</div><div>Median Session</div><div>17.55</div><div class="up">+2.10%</div><div class="col-hide">Option</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>A complete desk, in your pocket.</h2>
+      <p>Five stations built around a single live market engine. Every screen sees the same tick.</p>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="icon">D</div>
+        <h3>Dashboard</h3>
+        <p>NAV, P&amp;L, exposure and an at-a-glance heatmap of every instrument. The desk at 09:30, in one screen.</p>
+      </div>
+      <div class="card">
+        <div class="icon">M</div>
+        <h3>Markets</h3>
+        <p>Live ticking prices, sparkline history and a full depth view across futures, swaps, options and notes.</p>
+      </div>
+      <div class="card">
+        <div class="icon">P</div>
+        <h3>Portfolio</h3>
+        <p>Positions, working orders, fills and a trade blotter. Mark-to-market updates as the feed walks.</p>
+      </div>
+      <div class="card">
+        <div class="icon">A</div>
+        <h3>Analytics</h3>
+        <p>Candle aggregation, returns distribution and correlation between the behavior metrics you're watching.</p>
+      </div>
+      <div class="card">
+        <div class="icon">N</div>
+        <h3>Alerts &amp; Notifications</h3>
+        <p>Set triggers on price, change, or your own P&amp;L. The desk tells you when something matters.</p>
+      </div>
+      <div class="card">
+        <div class="icon">S</div>
+        <h3>Settings</h3>
+        <p>Pause the feed, reset the book, change starting cash, or wipe local state. You own the simulator.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DESK + TERMINAL -->
+<section id="desk">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Built like a real trading desk.</h2>
+      <p>The data model, the order semantics, the risk view — all designed to feel honest, never gamified.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="panel">
+        <h3>How a session feels</h3>
+        <p>The simulator seeds a deterministic random walk per instrument, then runs a tick engine that updates prices,
+           marks positions, and drives the order book in real time.</p>
+        <div class="kv">
+          <span>Tick interval</span><span>1.0s</span>
+          <span>History per ticker</span><span>~480 ticks</span>
+          <span>Persistence</span><span>JSON, on-device</span>
+          <span>Network calls</span><span>None</span>
+          <span>Accounts required</span><span>None</span>
+          <span>Tracking</span><span>None</span>
+        </div>
+      </div>
+
+      <div class="terminal" aria-label="Terminal sample">
+        <div class="line"><span class="time">09:31:02</span><span class="tag">FILL</span><span>BUY 200 <span style="color:var(--gold)">PBD-DAU</span> @ 128.18</span></div>
+        <div class="line"><span class="time">09:31:05</span><span class="tag">ALERT</span><span>PBD-RTN-30 crossed 42.00 <span class="down">-0.40%</span></span></div>
+        <div class="line"><span class="time">09:31:09</span><span class="tag">MARK</span><span class="muted">NAV 1,012,440.18</span> <span class="up">+124.06</span></div>
+        <div class="line"><span class="time">09:31:13</span><span class="tag">ORDER</span><span>WORKING LIMIT SELL 100 <span style="color:var(--gold)">PBD-ARPDAU</span> @ 0.91</span></div>
+        <div class="line"><span class="time">09:31:17</span><span class="tag">FILL</span><span>BUY 50 <span style="color:var(--gold)">PBD-CHRN</span> @ 17.42 <span class="up">+0.06</span></span></div>
+        <div class="line"><span class="time">09:31:20</span><span class="tag">TICK</span><span class="muted">feed alive · 8 instruments · paused? no</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTRUMENTS -->
+<section id="instruments">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>The instrument set.</h2>
+      <p>Each contract is pegged to a single player-behavior metric from a real-looking live service.</p>
+    </div>
+
+    <div class="inst-grid">
+      <div class="inst">
+        <div class="top"><div class="t">PBD-DAU</div><div class="k">Index</div></div>
+        <div class="name">Daily Active Users · Cross-studio composite</div>
+        <div class="price">128.40</div>
+        <div class="chg up">+1.82%</div>
+      </div>
+      <div class="inst">
+        <div class="top"><div class="t">PBD-RTN-30</div><div class="k">Futures</div></div>
+        <div class="name">30-Day Retention · Season-launch proxy</div>
+        <div class="price">42.06</div>
+        <div class="chg down">-0.34%</div>
+      </div>
+      <div class="inst">
+        <div class="top"><div class="t">PBD-ARPDAU</div><div class="k">Swap</div></div>
+        <div class="name">Revenue per DAU · Monetization leg</div>
+        <div class="price">0.87</div>
+        <div class="chg up">+0.41%</div>
+      </div>
+      <div class="inst">
+        <div class="top"><div class="t">PBD-CHRN</div><div class="k">Option</div></div>
+        <div class="name">Median Session Length · Engagement</div>
+        <div class="price">17.55</div>
+        <div class="chg up">+2.10%</div>
+      </div>
+      <div class="inst">
+        <div class="top"><div class="t">PBD-WAU</div><div class="k">Index</div></div>
+        <div class="name">Weekly Active Users · Reach composite</div>
+        <div class="price">612.30</div>
+        <div class="chg up">+0.92%</div>
+      </div>
+      <div class="inst">
+        <div class="top"><div class="t">PBD-CHURN</div><div class="k">Futures</div></div>
+        <div class="name">7-Day Churn · Risk hedge leg</div>
+        <div class="price">8.14</div>
+        <div class="chg down">-0.18%</div>
+      </div>
+      <div class="inst">
+        <div class="top"><div class="t">PBD-LTV</div><div class="k">Swap</div></div>
+        <div class="name">Lifetime Value · Cohort-balanced</div>
+        <div class="price">73.91</div>
+        <div class="chg up">+0.27%</div>
+      </div>
+      <div class="inst">
+        <div class="top"><div class="t">PBD-CONV</div><div class="k">Notes</div></div>
+        <div class="name">Conversion to Payer · Funnel leg</div>
+        <div class="price">4.62</div>
+        <div class="chg up">+0.55%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Frequently asked.</h2>
+      <p>If something isn't covered here, head to <a href="support.html">Support</a>.</p>
+    </div>
+
+    <div class="faq">
+      <details>
+        <summary>Does EXIO PBD use real money or connect to a brokerage?</summary>
+        <p>No. EXIO PBD is a self-contained simulator. All prices, fills, NAV and P&amp;L are generated locally by a
+           deterministic random-walk engine. Nothing is sent to a server, and there is no real-money trading path.</p>
+      </details>
+      <details>
+        <summary>What data does the app collect?</summary>
+        <p>None. The app stores your positions, orders, alerts and price history as local JSON files on your device.
+           It uses no tracking, no third-party SDKs, and no advertising identifiers. See the
+           <a href="privacy.html">Privacy Policy</a> for the full disclosure.</p>
+      </details>
+      <details>
+        <summary>Can I pause or reset the simulator?</summary>
+        <p>Yes. The Settings tab lets you pause the live feed, change starting cash, reset the book back to seed, or
+           wipe all local data.</p>
+      </details>
+      <details>
+        <summary>Does it work offline?</summary>
+        <p>Yes. The simulator, charts, order entry, alerts and analytics all run on-device.</p>
+      </details>
+      <details>
+        <summary>Which platforms are supported?</summary>
+        <p>iOS, with a SwiftUI interface that adapts from iPhone to iPad. iOS 17 or later is recommended.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- DOWNLOAD CTA -->
+<section id="download">
+  <div class="wrap">
+    <div class="panel" style="text-align:center; padding: 40px 24px;">
+      <h2 style="margin:0 0 8px;">Open the book.</h2>
+      <p style="margin:0 auto 18px; max-width: 540px;">EXIO PBD is a trading-desk simulator for player behavior.
+         Everything happens on your device, at your pace.</p>
+      <a class="btn primary" href="#">Download for iOS</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div>© 2026 EXIO PBD. A simulated trading-desk environment. Not investment advice.</div>
+    <div class="foot-links">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms of Use</a>
+      <a href="support.html">Support</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
